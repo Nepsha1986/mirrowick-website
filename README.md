@@ -85,3 +85,12 @@ running (`npm run dev` in the game, where `window.game` is exposed) with the
 HUD hidden, and kept in `src/assets/shots/`. Astro turns them into WebP at
 build time. The intro's frames (`src/assets/film/<year>.png`) are its film
 canvas saved as it is, without the words under it.
+
+## Deploy
+
+Every push to `main` builds the site and publishes it to GitHub Pages
+(`.github/workflows/deploy.yml`), at https://mirrowick.com/ (`public/CNAME`).
+The domain's DNS: `A` records for `mirrowick.com` to GitHub's
+185.199.108.153, 185.199.109.153, 185.199.110.153 and 185.199.111.153, and a
+`CNAME` for `www` to `nepsha1986.github.io`.
+
