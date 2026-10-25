@@ -12,15 +12,9 @@ const s = m.status;
 
 <section class="section status" id="play">
   <div class="wrap grid">
-    <div data-reveal>
+    <div class="where" data-reveal>
       <h2>{s.title}</h2>
       <p class="lead">{s.lead}</p>
-      <h3 class="eyebrow">{s.has}</h3>
-      <ul class="list">
-        {s.items.map((item) => <li>{item}</li>)}
-      </ul>
-    </div>
-    <aside class="where" data-reveal>
       <h3 class="eyebrow">{s.platforms}</h3>
       <a class="platform live" href={PLAY_URL}>
         <span class="name">{s.browser}</span>
@@ -31,61 +25,38 @@ const s = m.status;
         <span class="url">Steam</span>
       </div>
       <a class="btn btn-primary" href={PLAY_URL}>{m.hero.play}</a>
-    </aside>
+    </div>
+
+    <!-- What the prototype has, typed on a sheet as the Facility's notes are. -->
+    <div class="note" data-reveal>
+      <h3>{s.has}</h3>
+      <ul>
+        {s.items.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
   </div>
 </section>
 
 <style>
   .grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
-    gap: clamp(32px, 6vw, 96px);
-    align-items: start;
-  }
-
-  .list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    columns: 2;
-    column-gap: 32px;
-  }
-
-  .list li {
-    break-inside: avoid;
-    padding: 0.55em 0 0.55em 1.4em;
-    position: relative;
-    color: var(--silver-dim);
-  }
-
-  /* A white stone of the seal for a bullet. */
-  .list li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 1.15em;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--silver);
-    box-shadow: 0 0 10px var(--glass-glow);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(40px, 7vw, 110px);
+    align-items: center;
   }
 
   h3.eyebrow {
-    margin-top: 2.2em;
+    margin: 2em 0 12px;
   }
 
   .where {
-    padding: 30px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: linear-gradient(180deg, var(--ink-3), var(--ink-2));
     display: grid;
     gap: 12px;
   }
 
-  .where h3.eyebrow {
-    margin: 0 0 6px;
+  .where h2,
+  .where .lead {
+    margin-bottom: 0;
   }
 
   .platform {
@@ -122,19 +93,59 @@ const s = m.status;
   }
 
   .where .btn {
-    justify-content: center;
+    justify-self: start;
     margin-top: 10px;
+  }
+
+  .note {
+    padding: clamp(26px, 4vw, 40px) clamp(26px, 4vw, 44px);
+    border-radius: 2px 4px 3px 2px;
+    background:
+      radial-gradient(circle at 88% 10%, rgba(150, 110, 60, 0.14), transparent 40%),
+      radial-gradient(circle at 6% 94%, rgba(120, 90, 50, 0.12), transparent 36%), #f4f1ea;
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.7),
+      inset 0 0 40px rgba(120, 90, 50, 0.16);
+    color: var(--paper-ink);
+    transform: rotate(1.2deg);
+  }
+
+  .note h3 {
+    margin: 0 0 1em;
+    font: 600 0.8rem/1 var(--sans);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--paper-ink-faint);
+  }
+
+  .note ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font:
+      400 1rem/1.6 'Courier New',
+      Courier,
+      monospace;
+  }
+
+  .note li {
+    padding: 0.35em 0 0.35em 1.6em;
+    position: relative;
+  }
+
+  .note li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--paper-ink-faint);
   }
 
   @media (max-width: 900px) {
     .grid {
       grid-template-columns: 1fr;
     }
-  }
-
-  @media (max-width: 560px) {
-    .list {
-      columns: 1;
+    .note {
+      transform: rotate(0.6deg);
     }
   }
 </style>

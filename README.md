@@ -1,7 +1,7 @@
 # Mirrowick — the website
 
-The website of [Mirrowick](https://github.com/Nepsha1986/mirrowick), a
-single-player top-down game about one place in two times. The game itself is
+The website of Mirrowick, a
+single-player top-down game. The game itself is
 played at **https://play.mirrowick.com/**; this is the site around it: the
 landing page and the news.
 
@@ -34,11 +34,13 @@ src/
   components/
     home/                  the landing page's sections, in page order
     Seal.astro             the seal and the glass, as on the title screen
+    Paper.astro            a section on old paper, with ragged edges
     Wordmark.astro         Mirr◯wick, the great rune for the "o"
     Rune.astro             one of the seal's signs, from src/assets/runes
   content/news/<lang>/     news posts, Markdown or MDX
   i18n/                    every word the site shows, one file per language
   assets/shots/            screenshots of the game
+  assets/film/             frames of the intro's pencil film, one per year
   assets/runes/            the seal's signs, copied from the game's docs/runes
   styles/global.css        the game's colours and type
 ```
@@ -64,7 +66,7 @@ A post is a file in `src/content/news/<lang>/`, with this front matter:
 title: 'The first chapter’s prototype is playable'
 description: 'One or two sentences for the list and for search results.'
 date: 2026-10-25
-cover: ../../../assets/shots/seal-tomorrow.png # optional
+cover: ../../../assets/shots/tomorrow-vivarium.png # optional
 coverAlt: 'What the cover shows' # optional
 draft: false # optional; drafts show only in `npm run dev`
 ---
@@ -79,6 +81,5 @@ post needn't be in every language.
 There are no image files in the game, so screenshots are taken from it
 running (`npm run dev` in the game, where `window.game` is exposed) with the
 HUD hidden, and kept in `src/assets/shots/`. Astro turns them into WebP at
-build time. `seal-2012.png` and `seal-tomorrow.png` are cropped to the same
-point, the middle of the seal, so the slider on the landing page lines them
-up.
+build time. The intro's frames (`src/assets/film/<year>.png`) are its film
+canvas saved as it is, without the words under it.

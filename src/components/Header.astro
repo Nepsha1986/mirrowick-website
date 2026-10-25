@@ -18,7 +18,6 @@ const home = href(lang);
   <div class="bar wrap">
     <a class="brand" href={home}><Wordmark /></a>
     <nav class="nav" aria-label="Main">
-      <a href={`${home}#world`}>{m.nav.world}</a>
       <a href={href(lang, 'news')}>{m.nav.news}</a>
     </nav>
     <div class="side">
@@ -138,9 +137,6 @@ const home = href(lang);
     }
     .nav {
       gap: 14px;
-    }
-    .nav a:first-child {
-      display: none;
     }
     .side {
       gap: 8px;

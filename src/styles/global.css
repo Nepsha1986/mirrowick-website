@@ -20,6 +20,13 @@
     #8fe0e4 80%,
     rgba(140, 220, 230, 0)
   );
+  /* Old paper, as the game's notes and the intro's pencil film are drawn on. */
+  --paper: #efe4cc;
+  --paper-2: #e6d6b2;
+  --paper-ink: #2e2118;
+  --paper-ink-dim: rgba(46, 33, 24, 0.68);
+  --paper-ink-faint: rgba(46, 33, 24, 0.4);
+  --hand: #233256;
   --serif: 'Cormorant Infant', Georgia, serif;
   --sans: 'Manrope', system-ui, sans-serif;
 

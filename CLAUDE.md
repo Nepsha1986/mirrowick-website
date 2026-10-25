@@ -10,13 +10,19 @@ Russian. Code, comments and commit messages are in English.
   line to every language at once.
 - **No spoilers.** The site sells the mystery, it doesn't solve it. Keep
   off it what the game's `docs/story.md` keeps for later: what the mirror
-  really is, the company, the year of the disaster, that the glass only
-  leads forward, what became of Victor.
+  really is, that Home and the Fading Tomorrow are one place in two times
+  (no "two times", no crossing between them), the company, the year of the
+  disaster, that the glass only leads forward, what became of Victor.
 - **Only what is real.** Describe what the game has now, not what was only
   discussed. Steam is "coming", with no link, until there is a store page.
+- **No GitHub links.** The game's repository is closed; the site never links to
+  it or names it.
+- **Not only dark.** The dark sections take turns with old paper (`Paper.astro`,
+  like the game's notes and the intro's pencil film), so the page doesn't sink
+  into black.
 - **Look like the game.** The colours and fonts in `src/styles/global.css`
   are the game's own (`Mirrowick/src/ui/styles.css`); runes come from the
-  game's `docs/runes/`. Dark only.
+  game's `docs/runes/`.
 - npm: `.npmrc` points at the public registry, since the machine's global
   one is a private mirror.
 
