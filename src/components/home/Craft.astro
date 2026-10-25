@@ -1,0 +1,87 @@
+---
+import { Image } from 'astro:assets';
+import { t, type Locale } from '../../i18n';
+import shot from '../../assets/shots/home-shed.png';
+
+interface Props {
+  lang: Locale;
+}
+
+const m = t(Astro.props.lang).craft;
+---
+
+<section class="section craft">
+  <div class="wrap grid">
+    <div class="shot" data-reveal>
+      <Image src={shot} alt="" widths={[640, 960, 1400]} sizes="(max-width: 900px) 100vw, 620px" />
+    </div>
+    <div class="copy" data-reveal>
+      <h2>{m.title}</h2>
+      <p class="lead">{m.lead}</p>
+      <dl class="facts">
+        {
+          m.facts.map((f) => (
+            <div>
+              <dt>{f.value}</dt>
+              <dd>{f.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+  }
+
+  .shot {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  }
+
+  .shot :global(img) {
+    width: 100%;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 2em 0 0;
+  }
+
+  .facts div {
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+  }
+
+  dt {
+    font-family: var(--serif);
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--silver);
+  }
+
+  dd {
+    margin: 0.4em 0 0;
+    font-size: 0.85rem;
+    color: var(--silver-dim);
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .shot {
+      order: 1;
+    }
+  }
+</style>

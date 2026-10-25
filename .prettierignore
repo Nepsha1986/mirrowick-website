@@ -1,0 +1,7 @@
+dist
+.astro
+node_modules
+package-lock.json
+src/assets/runes
+public/favicon.svg
+src/assets/icon-app.svg

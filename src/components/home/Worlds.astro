@@ -1,0 +1,274 @@
+---
+import { Image } from 'astro:assets';
+import { t, type Locale } from '../../i18n';
+import seal2012 from '../../assets/shots/seal-2012.png';
+import sealTomorrow from '../../assets/shots/seal-tomorrow.png';
+import homeShot from '../../assets/shots/home-driveway.png';
+import tomorrowShot from '../../assets/shots/tomorrow-corridor.png';
+
+interface Props {
+  lang: Locale;
+}
+
+const m = t(Astro.props.lang);
+const w = m.worlds;
+const times = [
+  { key: 'home', ...w.home, shot: homeShot },
+  { key: 'tomorrow', ...w.tomorrow, shot: tomorrowShot },
+] as const;
+---
+
+<section class="section worlds" id="world">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <h2>{w.title}</h2>
+      <p class="lead">{w.lead}</p>
+    </div>
+
+    <figure class="compare" data-compare data-reveal>
+      <div class="frame">
+        <Image
+          class="shot"
+          src={sealTomorrow}
+          alt={`${w.tomorrow.name}: ${w.pairNote}`}
+          widths={[640, 960, 1280]}
+          sizes="(max-width: 1200px) 100vw, 1160px"
+        />
+        <div class="past">
+          <Image
+            class="shot"
+            src={seal2012}
+            alt={`${w.home.name}, ${w.home.when}: ${w.pairNote}`}
+            widths={[640, 960, 1280]}
+            sizes="(max-width: 1200px) 100vw, 1160px"
+          />
+        </div>
+        <div class="handle" aria-hidden="true"><span></span></div>
+        <span class="tag left">{w.home.name} · {w.home.when}</span>
+        <span class="tag right">{w.tomorrow.name}</span>
+        <input type="range" min="0" max="100" value="50" aria-label={w.slider} />
+      </div>
+      <figcaption>{w.pairNote}</figcaption>
+    </figure>
+
+    <div class="times">
+      {
+        times.map((time, i) => (
+          <article
+            class:list={['time', time.key]}
+            data-reveal
+            style={`transition-delay:${i * 0.1}s`}
+          >
+            <Image
+              class="thumb"
+              src={time.shot}
+              alt=""
+              widths={[480, 760]}
+              sizes="(max-width: 760px) 100vw, 560px"
+            />
+            <div class="body">
+              <p class="eyebrow">{time.when}</p>
+              <h3>{time.name}</h3>
+              <p>{time.text}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  // Drag (or arrow keys on the range) to move the edge between the times.
+  for (const fig of document.querySelectorAll<HTMLElement>('[data-compare]')) {
+    const range = fig.querySelector('input')!;
+    const set = () => fig.style.setProperty('--pos', `${range.value}%`);
+    range.addEventListener('input', set);
+    set();
+  }
+</script>
+
+<style>
+  .compare {
+    margin: 0;
+    --pos: 50%;
+  }
+
+  .frame {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    aspect-ratio: 1280 / 760;
+    background: var(--night);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  }
+
+  .frame :global(.shot) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .past {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+  }
+
+  /* The cellar in 2012 is lit only from the hatch: lift it a little. */
+  .past :global(.shot) {
+    filter: brightness(1.7) contrast(1.05);
+  }
+
+  .handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 2px;
+    margin-left: -1px;
+    background: var(--iris);
+    background: linear-gradient(transparent, #c3a4ff 20%, #8fa6ff 50%, #8fe0e4 80%, transparent);
+    box-shadow: 0 0 18px var(--glass-glow);
+    pointer-events: none;
+  }
+
+  .handle span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid rgba(223, 228, 236, 0.6);
+    background: rgba(5, 6, 8, 0.65);
+    backdrop-filter: blur(6px);
+  }
+
+  .handle span::before,
+  .handle span::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    border: solid var(--silver);
+    border-width: 0 0 1.5px 1.5px;
+  }
+
+  .handle span::before {
+    left: 11px;
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .handle span::after {
+    right: 11px;
+    transform: translateY(-50%) rotate(-135deg);
+  }
+
+  .tag {
+    position: absolute;
+    top: 16px;
+    padding: 0.35em 0.8em;
+    border-radius: 999px;
+    background: rgba(5, 6, 8, 0.6);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  .tag.left {
+    left: 16px;
+  }
+
+  .tag.right {
+    right: 16px;
+  }
+
+  input[type='range'] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+  }
+
+  .frame:has(input:focus-visible) .handle span {
+    outline: 2px solid var(--glass);
+    outline-offset: 3px;
+  }
+
+  figcaption {
+    margin-top: 14px;
+    font-size: 0.9rem;
+    color: var(--silver-faint);
+    text-align: center;
+  }
+
+  .times {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: clamp(48px, 7vw, 96px);
+  }
+
+  .time {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--ink-2);
+  }
+
+  .time :global(.thumb) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .tomorrow :global(.thumb) {
+    filter: brightness(1.35);
+  }
+
+  .body {
+    padding: 26px 28px 10px;
+  }
+
+  .body p:last-child {
+    color: var(--silver-dim);
+  }
+
+  .body .eyebrow {
+    margin-bottom: 0.6em;
+  }
+
+  .home .eyebrow {
+    color: #d9c89a;
+  }
+
+  .tomorrow .eyebrow {
+    color: var(--glass);
+  }
+
+  @media (max-width: 760px) {
+    .times {
+      grid-template-columns: 1fr;
+    }
+    .tag {
+      font-size: 0.62rem;
+      top: 10px;
+    }
+    .tag.left {
+      left: 10px;
+    }
+    .tag.right {
+      right: 10px;
+    }
+  }
+</style>

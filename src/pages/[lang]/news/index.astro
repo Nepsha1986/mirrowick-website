@@ -1,0 +1,52 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { LOCALES, t, type Locale } from '../../../i18n';
+import { postsIn } from '../../../lib/news';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const m = t(lang).news;
+const posts = await postsIn(lang);
+---
+
+<Base lang={lang} title={m.title} description={m.lead}>
+  <section class="section page">
+    <div class="wrap">
+      <div class="section-head">
+        <h1>{m.title}</h1>
+        <p class="lead">{m.lead}</p>
+      </div>
+      {
+        posts.length ? (
+          <div class="grid">
+            {posts.map((post) => (
+              <PostCard post={post} lang={lang} />
+            ))}
+          </div>
+        ) : (
+          <p class="lead">{m.none}</p>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page {
+    padding-top: clamp(48px, 8vw, 100px);
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 6vw, 4.2rem);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: 20px;
+  }
+</style>

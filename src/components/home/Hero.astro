@@ -1,0 +1,118 @@
+---
+import Seal from '../Seal.astro';
+import Wordmark from '../Wordmark.astro';
+import { t, type Locale } from '../../i18n';
+import { PLAY_URL } from '../../site';
+
+interface Props {
+  lang: Locale;
+}
+
+const m = t(Astro.props.lang);
+---
+
+<section class="hero">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="wrap grid">
+    <div class="copy">
+      <p class="eyebrow">{m.hero.chapter}</p>
+      <Wordmark as="h1" class="title" />
+      <hr class="iris" />
+      <p class="tagline">{m.hero.tagline}</p>
+      <p class="lead">{m.hero.lead}</p>
+      <div class="actions">
+        <a class="btn btn-primary" href={PLAY_URL}>
+          {m.hero.play}
+          <span aria-hidden="true">→</span>
+        </a>
+        <span class="btn" aria-disabled="true">{m.hero.steam}</span>
+      </div>
+      <p class="status">{m.hero.status}</p>
+    </div>
+    <div class="art">
+      <Seal />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(48px, 9vw, 120px) clamp(64px, 10vw, 140px);
+    min-height: min(92vh, 900px);
+    display: flex;
+    align-items: center;
+  }
+
+  /* The streams of light behind the title screen, muted. */
+  .glow {
+    position: absolute;
+    inset: -20% -10%;
+    background:
+      radial-gradient(40% 35% at 18% 20%, rgba(60, 90, 130, 0.25), transparent 70%),
+      radial-gradient(30% 30% at 75% 50%, rgba(90, 60, 200, 0.18), transparent 70%),
+      radial-gradient(25% 25% at 60% 5%, rgba(80, 60, 160, 0.14), transparent 70%);
+    pointer-events: none;
+  }
+
+  .grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+  }
+
+  .copy :global(.title) {
+    font-size: clamp(3.6rem, 9vw, 7.2rem);
+    font-weight: 300;
+    margin: 0.35em 0 0.3em;
+  }
+
+  .copy .iris {
+    max-width: 440px;
+  }
+
+  .tagline {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+    line-height: 1.3;
+    margin: 0.9em 0 0.7em;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 2em;
+  }
+
+  .status {
+    margin-top: 1.4em;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--silver-faint);
+  }
+
+  .art {
+    width: min(100%, 560px);
+    justify-self: center;
+  }
+
+  @media (max-width: 900px) {
+    .hero {
+      min-height: 0;
+    }
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .art {
+      order: -1;
+      width: min(78vw, 420px);
+      margin-bottom: -12px;
+    }
+  }
+</style>

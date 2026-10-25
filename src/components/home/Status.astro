@@ -1,0 +1,140 @@
+---
+import { t, type Locale } from '../../i18n';
+import { PLAY_URL } from '../../site';
+
+interface Props {
+  lang: Locale;
+}
+
+const m = t(Astro.props.lang);
+const s = m.status;
+---
+
+<section class="section status" id="play">
+  <div class="wrap grid">
+    <div data-reveal>
+      <h2>{s.title}</h2>
+      <p class="lead">{s.lead}</p>
+      <h3 class="eyebrow">{s.has}</h3>
+      <ul class="list">
+        {s.items.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+    <aside class="where" data-reveal>
+      <h3 class="eyebrow">{s.platforms}</h3>
+      <a class="platform live" href={PLAY_URL}>
+        <span class="name">{s.browser}</span>
+        <span class="url">play.mirrowick.com →</span>
+      </a>
+      <div class="platform">
+        <span class="name">{s.steamSoon}</span>
+        <span class="url">Steam</span>
+      </div>
+      <a class="btn btn-primary" href={PLAY_URL}>{m.hero.play}</a>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
+    gap: clamp(32px, 6vw, 96px);
+    align-items: start;
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 2;
+    column-gap: 32px;
+  }
+
+  .list li {
+    break-inside: avoid;
+    padding: 0.55em 0 0.55em 1.4em;
+    position: relative;
+    color: var(--silver-dim);
+  }
+
+  /* A white stone of the seal for a bullet. */
+  .list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.15em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--silver);
+    box-shadow: 0 0 10px var(--glass-glow);
+  }
+
+  h3.eyebrow {
+    margin-top: 2.2em;
+  }
+
+  .where {
+    padding: 30px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, var(--ink-3), var(--ink-2));
+    display: grid;
+    gap: 12px;
+  }
+
+  .where h3.eyebrow {
+    margin: 0 0 6px;
+  }
+
+  .platform {
+    display: grid;
+    gap: 2px;
+    padding: 16px 18px;
+    border: 1px dashed var(--silver-faint);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--silver-dim);
+  }
+
+  .platform.live {
+    border-style: solid;
+    border-color: rgba(157, 178, 255, 0.45);
+    color: var(--silver);
+  }
+
+  .platform.live:hover {
+    background: rgba(157, 178, 255, 0.06);
+  }
+
+  .name {
+    font-weight: 600;
+  }
+
+  .url {
+    font-size: 0.82rem;
+    color: var(--silver-faint);
+  }
+
+  .live .url {
+    color: var(--glass);
+  }
+
+  .where .btn {
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .list {
+      columns: 1;
+    }
+  }
+</style>

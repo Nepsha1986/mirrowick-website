@@ -1,0 +1,70 @@
+---
+import { formatDate, href, t, type Locale } from '../i18n';
+import { slugOf, type Post } from '../lib/news';
+
+interface Props {
+  post: Post;
+  lang: Locale;
+}
+
+const { post, lang } = Astro.props;
+const url = href(lang, 'news', slugOf(post));
+---
+
+<article class="card">
+  <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
+  <h3><a href={url}>{post.data.title}</a></h3>
+  <p>{post.data.description}</p>
+  <span class="more" aria-hidden="true">{t(lang).news.read} →</span>
+</article>
+
+<style>
+  .card {
+    position: relative;
+    padding: 26px 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--ink-2);
+    transition:
+      border-color 0.25s,
+      background 0.25s;
+  }
+
+  .card:hover {
+    border-color: rgba(157, 178, 255, 0.4);
+    background: var(--ink-3);
+  }
+
+  time {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--silver-faint);
+  }
+
+  h3 {
+    margin: 0.5em 0 0.4em;
+  }
+
+  /* The whole card is the link. */
+  h3 a {
+    color: var(--silver);
+    text-decoration: none;
+  }
+
+  h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  p {
+    color: var(--silver-dim);
+    margin: 0 0 1em;
+  }
+
+  .more {
+    font-size: 0.85rem;
+    color: var(--glass);
+  }
+</style>

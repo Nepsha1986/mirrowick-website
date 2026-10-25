@@ -1,0 +1,29 @@
+{
+  "name": "mirrowick-website",
+  "description": "The website of Mirrowick: one place, two times, and a mirror between them.",
+  "author": "nepsha1986",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^8.1.1",
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource/cormorant-infant": "^5.3.0",
+    "@fontsource/manrope": "^5.3.0",
+    "astro": "^7.4.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "~6.0.3"
+  }
+}

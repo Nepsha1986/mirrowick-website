@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import Rune from '../components/Rune.astro';
+import { DEFAULT_LOCALE, href, t } from '../i18n';
+
+/* One static 404 for every language: shown in the default, with a way back in each. */
+const lang = DEFAULT_LOCALE;
+const m = t(lang).notFound;
+---
+
+<Base lang={lang} title={m.title}>
+  <section class="section nf">
+    <div class="wrap">
+      <Rune sign="great" class="rune" stroke={1.6} />
+      <h1>{m.title}</h1>
+      <p class="lead">{m.text}</p>
+      <p class="links">
+        <a class="btn" href={href('en')}>{t('en').notFound.home}</a>
+        <a class="btn" href={href('ru')} lang="ru">{t('ru').notFound.home}</a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    text-align: center;
+  }
+
+  .nf :global(.rune) {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 32px;
+    color: var(--silver-dim);
+    filter: drop-shadow(0 0 12px var(--glass-glow));
+  }
+
+  .lead {
+    margin-inline: auto;
+  }
+
+  .links {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 2em;
+  }
+</style>

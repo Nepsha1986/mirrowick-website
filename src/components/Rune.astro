@@ -1,0 +1,40 @@
+---
+/**
+ * One of the seal's signs (or the great rune), drawn from the game's own
+ * SVGs (copied from Mirrowick/docs/runes): strokes in the current colour,
+ * so CSS decides how they shine.
+ */
+const signs = import.meta.glob<string>('../assets/runes/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+interface Props {
+  /** `great`, or `01`…`12`. */
+  sign: string;
+  class?: string;
+  /** Stroke width in the rune's units (the files draw at 2.6). */
+  stroke?: number;
+  /** Where it stands when nested in another SVG. */
+  x?: number;
+  y?: number;
+  size?: number;
+}
+
+const { sign, class: className, stroke = 2.6, x, y, size } = Astro.props;
+const place =
+  size === undefined ? '' : ` x="${x ?? 0}" y="${y ?? 0}" width="${size}" height="${size}"`;
+const raw = signs[`../assets/runes/${sign}.svg`];
+if (!raw) throw new Error(`No rune "${sign}"`);
+const svg = raw
+  .replace(/ width="\d+" height="\d+"/, '')
+  .replace(/#8a8f99/g, 'currentColor')
+  .replace(/stroke-width="[\d.]+"/, `stroke-width="${stroke}"`)
+  .replace(
+    '<svg ',
+    `<svg aria-hidden="true" focusable="false"${place}${className ? ` class="${className}"` : ''} `,
+  );
+---
+
+<Fragment set:html={svg} />

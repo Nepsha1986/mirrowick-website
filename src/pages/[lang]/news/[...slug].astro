@@ -1,0 +1,149 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../../layouts/Base.astro';
+import { LOCALES, formatDate, href, isLocale, t, type Locale } from '../../../i18n';
+import { langOf, slugOf, type Post } from '../../../lib/news';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('news', (p) => import.meta.env.DEV || !p.data.draft);
+  return posts
+    .filter((post) => isLocale(langOf(post)))
+    .map((post) => {
+      const slug = slugOf(post);
+      // The same post in the other languages, if it has been written there;
+      // otherwise the switch goes to that language's news.
+      const alternates = Object.fromEntries(
+        LOCALES.map((l) => [
+          l,
+          posts.some((p) => langOf(p) === l && slugOf(p) === slug)
+            ? href(l, 'news', slug)
+            : href(l, 'news'),
+        ]),
+      );
+      return { params: { lang: langOf(post), slug }, props: { post, alternates } };
+    });
+}
+
+interface Props {
+  post: Post;
+  alternates: Record<Locale, string>;
+}
+
+const lang = Astro.params.lang as Locale;
+const { post, alternates } = Astro.props;
+const { Content } = await render(post);
+const m = t(lang).news;
+---
+
+<Base
+  lang={lang}
+  title={post.data.title}
+  description={post.data.description}
+  alternates={alternates}
+  type="article"
+>
+  <article class="section post">
+    <div class="wrap narrow">
+      <a class="back" href={href(lang, 'news')}>← {m.back}</a>
+      <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
+      <h1>{post.data.title}</h1>
+      <p class="lead">{post.data.description}</p>
+      {
+        post.data.cover && (
+          <Image
+            class="cover"
+            src={post.data.cover}
+            alt={post.data.coverAlt ?? ''}
+            widths={[720, 1440]}
+            sizes="(max-width: 760px) 100vw, 720px"
+          />
+        )
+      }
+      <hr class="iris" />
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .post {
+    padding-top: clamp(40px, 7vw, 90px);
+  }
+
+  .narrow {
+    max-width: 720px;
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: 2.4em;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  time {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--silver-faint);
+    margin-bottom: 1em;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 6vw, 3.8rem);
+  }
+
+  .cover {
+    width: 100%;
+    border-radius: var(--radius);
+    margin: 1.5em 0;
+  }
+
+  .iris {
+    margin: 2.4em 0;
+  }
+
+  .prose {
+    color: var(--silver-dim);
+  }
+
+  .prose :global(h2) {
+    font-size: 2rem;
+    margin-top: 1.6em;
+    color: var(--silver);
+  }
+
+  .prose :global(h3) {
+    margin-top: 1.4em;
+    color: var(--silver);
+  }
+
+  .prose :global(li) {
+    margin: 0.3em 0;
+  }
+
+  .prose :global(img) {
+    border-radius: var(--radius);
+    margin: 1.5em 0;
+  }
+
+  .prose :global(blockquote) {
+    margin: 1.5em 0;
+    padding-left: 1.2em;
+    border-left: 2px solid var(--glass);
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-style: italic;
+  }
+
+  .prose :global(code) {
+    font-size: 0.9em;
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    background: var(--ink-3);
+  }
+</style>

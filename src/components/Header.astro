@@ -1,0 +1,152 @@
+---
+import Wordmark from './Wordmark.astro';
+import { LOCALES, href, t, type Locale } from '../i18n';
+import { PLAY_URL } from '../site';
+
+interface Props {
+  lang: Locale;
+  /** This page in each language. */
+  alternates: Record<Locale, string>;
+}
+
+const { lang, alternates } = Astro.props;
+const m = t(lang);
+const home = href(lang);
+---
+
+<header class="header">
+  <div class="bar wrap">
+    <a class="brand" href={home}><Wordmark /></a>
+    <nav class="nav" aria-label="Main">
+      <a href={`${home}#world`}>{m.nav.world}</a>
+      <a href={href(lang, 'news')}>{m.nav.news}</a>
+    </nav>
+    <div class="side">
+      <ul class="langs" aria-label={m.nav.language}>
+        {
+          LOCALES.map((l) => (
+            <li>
+              <a
+                href={alternates[l]}
+                hreflang={l}
+                lang={l}
+                aria-current={l === lang ? 'true' : undefined}
+                title={t(l).meta.lang}
+              >
+                {l.toUpperCase()}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn play" href={PLAY_URL}>{m.nav.play}</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Remember the language picked here, so `/` opens it next time.
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('.langs a')) {
+    a.addEventListener('click', () => {
+      try {
+        localStorage.setItem('mirrowick.lang', a.hreflang);
+      } catch {}
+    });
+  }
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: linear-gradient(rgba(5, 6, 8, 0.92), rgba(5, 6, 8, 0.72));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    height: 68px;
+  }
+
+  .brand {
+    font-size: 1.7rem;
+    text-decoration: none;
+    padding-top: 2px;
+  }
+
+  .nav {
+    display: flex;
+    gap: 24px;
+    margin-right: auto;
+  }
+
+  .nav a,
+  .langs a {
+    color: var(--silver-dim);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .nav a:hover,
+  .langs a:hover {
+    color: var(--silver);
+  }
+
+  .side {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .langs {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .langs a {
+    display: block;
+    padding: 4px 6px;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+  }
+
+  .langs a[aria-current] {
+    color: var(--silver);
+    box-shadow: inset 0 -1px 0 var(--glass);
+  }
+
+  .play {
+    padding: 0.55em 1.2em;
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 640px) {
+    .bar {
+      gap: 14px;
+    }
+    .brand {
+      font-size: 1.4rem;
+    }
+    .nav {
+      gap: 14px;
+    }
+    .nav a:first-child {
+      display: none;
+    }
+    .side {
+      gap: 8px;
+    }
+    .play {
+      display: none;
+    }
+  }
+</style>

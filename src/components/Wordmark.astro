@@ -1,0 +1,55 @@
+---
+import Rune from './Rune.astro';
+
+/**
+ * The title as the game's menu sets it: Mirr◯wick, the great rune's ring
+ * standing for the "o", its three small rings over the line and its tail
+ * under it.
+ */
+interface Props {
+  as?: 'h1' | 'span';
+  class?: string;
+}
+
+const { as: Tag = 'span', class: className } = Astro.props;
+---
+
+<Tag class:list={['wordmark', className]} aria-label="Mirrowick">
+  <span aria-hidden="true">Mirr</span><span class="o" aria-hidden="true"
+    ><Rune sign="great" stroke={2.4} /></span
+  ><span aria-hidden="true">wick</span>
+</Tag>
+
+<style>
+  .wordmark {
+    display: inline-block;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.03em;
+    color: var(--silver);
+    white-space: nowrap;
+    margin: 0;
+  }
+
+  /* As wide as an "o"; its baseline is its bottom, so the ring sits on the line. */
+  .o {
+    display: inline-block;
+    position: relative;
+    width: 0.5em;
+    height: 0.44em;
+    margin-inline: 0.02em;
+  }
+
+  .o :global(svg) {
+    position: absolute;
+    left: 50%;
+    bottom: 0.215em;
+    width: 1.45em;
+    height: 1.45em;
+    max-width: none;
+    transform: translate(-50%, 50%);
+    overflow: visible;
+    filter: drop-shadow(0 0 0.08em var(--glass-glow));
+  }
+</style>

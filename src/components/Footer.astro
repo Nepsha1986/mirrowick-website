@@ -1,0 +1,86 @@
+---
+import Wordmark from './Wordmark.astro';
+import { fill, href, t, type Locale } from '../i18n';
+import { GITHUB_URL, PLAY_URL } from '../site';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const m = t(lang);
+---
+
+<footer class="footer">
+  <hr class="iris" />
+  <div class="wrap inner">
+    <div>
+      <a class="brand" href={href(lang)}><Wordmark /></a>
+      <p class="tag">{m.hero.tagline}</p>
+    </div>
+    <nav class="links" aria-label="Footer">
+      <a href={PLAY_URL}>{m.nav.play}</a>
+      <a href={href(lang, 'news')}>{m.nav.news}</a>
+      <a href={GITHUB_URL}>GitHub</a>
+    </nav>
+    <p class="small">
+      {fill(m.footer.made, { year: new Date().getFullYear() })} · {m.footer.fonts}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: 40px;
+  }
+
+  .inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px 40px;
+    padding-block: 48px 40px;
+  }
+
+  .brand {
+    font-size: 2rem;
+    text-decoration: none;
+  }
+
+  .tag {
+    margin: 0.8em 0 0;
+    color: var(--silver-dim);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.15rem;
+  }
+
+  .links {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .links a {
+    color: var(--silver-dim);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .links a:hover {
+    color: var(--silver);
+  }
+
+  .small {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--silver-faint);
+  }
+
+  @media (max-width: 640px) {
+    .inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
