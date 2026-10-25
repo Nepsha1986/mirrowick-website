@@ -93,4 +93,3 @@ Every push to `main` builds the site and publishes it to GitHub Pages
 The domain's DNS: `A` records for `mirrowick.com` to GitHub's
 185.199.108.153, 185.199.109.153, 185.199.110.153 and 185.199.111.153, and a
 `CNAME` for `www` to `nepsha1986.github.io`.
-
