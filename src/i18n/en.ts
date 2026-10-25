@@ -20,12 +20,13 @@ export const en = {
   hero: {
     chapter: 'Chapter I · The Fading Tomorrow',
     /** The intro's last words, its whole point. */
-    line: "Most of us don't care about history. Until the day it calls for you.",
+    line: 'We think history is behind us. Until the day it stands in front of us.',
     play: 'Play in the browser',
     steam: 'Coming to Steam',
     status: 'Early prototype · v0.1 · free in the browser',
   },
   tales: {
+    kicker: 'Folklore',
     title: 'Every old town has its secret',
     /** Under the title: from the intro. */
     lead: 'It isn’t in the guidebooks. It is told.',
@@ -37,17 +38,17 @@ export const en = {
       'Of mirrors old women still cover for the night.',
       'Of wells where the echo answers from deeper than any well goes.',
     ],
-    coda: 'Everyone has heard these tales: round a campfire, on the school bus, from Grandad at the table. And everyone knows they are only tales.',
-  },
-  glimpse: {
-    line: 'Some cellars are older than the houses above them.',
-    alt: 'A round stone chamber in the dark, with a glowing well in the middle',
   },
   gallery: {
+    kicker: 'Stills',
     title: 'Have a look around',
+    lead: 'Shots from the prototype, as it is now.',
     open: 'Enlarge',
     close: 'Close',
+    prev: 'Previous',
+    next: 'Next',
     shots: {
+      cellar: 'The cellar under the shed',
       porch: 'Victor’s house, in the afternoon',
       driveway: 'The drive, where his car always is',
       garage: 'Victor’s garage',
@@ -57,12 +58,12 @@ export const en = {
       fight: 'Gunfire in the gallery',
       exp: 'Under the flashlight',
       director: 'An office left as it was',
-      staff: 'A staff room',
       cornered: 'Two of them',
       vivarium: 'Cages',
     },
   },
   status: {
+    kicker: 'The prototype',
     title: 'Where it stands',
     lead: 'Mirrowick is an early prototype of the first chapter, in active development.',
     has: 'In the prototype now',
@@ -79,6 +80,7 @@ export const en = {
     steamSoon: 'On Steam, later',
   },
   news: {
+    kicker: 'From the workshop',
     title: 'News',
     lead: 'What’s new in Mirrowick and how it is made.',
     latest: 'Latest news',
@@ -89,7 +91,6 @@ export const en = {
   },
   footer: {
     made: 'Mirrowick © {year}',
-    fonts: 'Set in Cormorant Infant and Manrope.',
   },
   notFound: {
     title: 'Nothing here but the dark',

@@ -1,6 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import Paper from '../Paper.astro';
+import Heading from '../Heading.astro';
+import Rune from '../Rune.astro';
 import { fill, t, type Locale } from '../../i18n';
 
 interface Props {
@@ -8,6 +10,8 @@ interface Props {
 }
 
 const m = t(Astro.props.lang).tales;
+/** A pencil mark in the margin by each tale. */
+const MARKS = ['06', '09', '02'];
 /** The intro's pencil film, one picture per year (src/assets/film/<year>.png). */
 const frames = import.meta.glob<{ default: ImageMetadata }>('../../assets/film/*.png', {
   eager: true,
@@ -20,12 +24,17 @@ const years = Object.entries(frames)
 <Paper class="tales" seed={3}>
   <div class="wrap grid">
     <div class="copy" data-reveal>
-      <h2>{m.title}</h2>
-      <p class="lead">{m.lead}</p>
+      <Heading kicker={m.kicker} title={m.title} lead={m.lead} sign="05" size="small" />
       <ul class="lines">
-        {m.lines.map((line) => <li>{line}</li>)}
+        {
+          m.lines.map((line, i) => (
+            <li style={`--chalk-delay:${0.9 + i * 0.45}s`}>
+              <Rune sign={MARKS[i % MARKS.length]!} class="chalk mark" stroke={4} />
+              {line}
+            </li>
+          ))
+        }
       </ul>
-      <p class="coda">{m.coda}</p>
     </div>
 
     <figure class="film" data-film data-reveal>
@@ -99,11 +108,11 @@ const years = Object.entries(frames)
     align-items: center;
   }
 
-  h2 {
-    margin-bottom: 0.3em;
+  .copy :global(.heading) {
+    margin-bottom: 0;
   }
 
-  .lead {
+  .copy :global(.lead) {
     font-family: var(--serif);
     font-style: italic;
     font-size: 1.35rem;
@@ -119,6 +128,8 @@ const years = Object.entries(frames)
   }
 
   .lines li {
+    position: relative;
+    padding-left: 2.1em;
     font-family: var(--serif);
     font-style: italic;
     font-weight: 500;
@@ -127,10 +138,15 @@ const years = Object.entries(frames)
     color: var(--hand);
   }
 
-  .coda {
-    margin: 0;
-    padding-top: 1.2em;
-    border-top: 1px solid rgba(46, 33, 24, 0.18);
+  .lines :global(.mark) {
+    position: absolute;
+    left: 0;
+    top: 0.05em;
+    width: 1.35em;
+    height: 1.35em;
+    color: var(--hand);
+    opacity: 0.7;
+    overflow: visible;
   }
 
   .film {

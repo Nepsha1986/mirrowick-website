@@ -34,9 +34,11 @@ src/
   components/
     home/                  the landing page's sections, in page order
     Seal.astro             the seal and the glass, as on the title screen
-    Paper.astro            a section on old paper, with ragged edges
+    Paper.astro            a section on old paper, its edges burnt
     Wordmark.astro         Mirr◯wick, the great rune for the "o"
     Rune.astro             one of the seal's signs, from src/assets/runes
+    Heading.astro          a section's title as the game's menu sets one
+    Divider.astro          the great rune between two dark sections
   content/news/<lang>/     news posts, Markdown or MDX
   i18n/                    every word the site shows, one file per language
   assets/shots/            screenshots of the game

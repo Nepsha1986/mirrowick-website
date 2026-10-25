@@ -1,5 +1,6 @@
 ---
 import Wordmark from './Wordmark.astro';
+import Rune from './Rune.astro';
 import { fill, href, t, type Locale } from '../i18n';
 import { PLAY_URL } from '../site';
 
@@ -9,10 +10,21 @@ interface Props {
 
 const { lang } = Astro.props;
 const m = t(lang);
+/** The seal's twelve signs, in a row along the foot of every page. */
+const SIGNS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
 ---
 
 <footer class="footer">
   <hr class="iris" />
+  <div class="wrap signs" data-reveal aria-hidden="true">
+    {
+      SIGNS.map((sign, i) => (
+        <span style={`--chalk-delay:${0.1 + i * 0.12}s`}>
+          <Rune sign={sign} class="chalk" stroke={3} />
+        </span>
+      ))
+    }
+  </div>
   <div class="wrap inner">
     <div>
       <a class="brand" href={href(lang)}><Wordmark /></a>
@@ -22,7 +34,7 @@ const m = t(lang);
       <a href={href(lang, 'news')}>{m.nav.news}</a>
     </nav>
     <p class="small">
-      {fill(m.footer.made, { year: new Date().getFullYear() })} · {m.footer.fonts}
+      {fill(m.footer.made, { year: new Date().getFullYear() })}
     </p>
   </div>
 </footer>
@@ -30,6 +42,24 @@ const m = t(lang);
 <style>
   .footer {
     margin-top: 40px;
+  }
+
+  .signs {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 36px;
+    color: var(--silver-faint);
+  }
+
+  .signs span {
+    width: clamp(18px, 2.4vw, 28px);
+    height: clamp(18px, 2.4vw, 28px);
+  }
+
+  .signs :global(svg) {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
   }
 
   .inner {

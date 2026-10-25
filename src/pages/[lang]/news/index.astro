@@ -1,6 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import PostCard from '../../../components/PostCard.astro';
+import Heading from '../../../components/Heading.astro';
 import { LOCALES, t, type Locale } from '../../../i18n';
 import { postsIn } from '../../../lib/news';
 
@@ -16,10 +17,7 @@ const posts = await postsIn(lang);
 <Base lang={lang} title={m.title} description={m.lead}>
   <section class="section page">
     <div class="wrap">
-      <div class="section-head">
-        <h1>{m.title}</h1>
-        <p class="lead">{m.lead}</p>
-      </div>
+      <Heading as="h1" kicker={m.kicker} title={m.title} lead={m.lead} sign="11" />
       {
         posts.length ? (
           <div class="grid">
@@ -38,10 +36,6 @@ const posts = await postsIn(lang);
 <style>
   .page {
     padding-top: clamp(48px, 8vw, 100px);
-  }
-
-  h1 {
-    font-size: clamp(2.6rem, 6vw, 4.2rem);
   }
 
   .grid {

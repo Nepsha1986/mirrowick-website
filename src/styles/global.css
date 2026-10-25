@@ -147,10 +147,6 @@ p {
   position: relative;
 }
 
-.section-head {
-  margin-bottom: clamp(36px, 5vw, 64px);
-}
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -241,6 +237,62 @@ p {
   .js [data-reveal] {
     opacity: 1;
     transform: none;
+    transition: none;
+  }
+}
+
+/* A sign of the seal drawn as chalk is: stroke by stroke, in the order the
+   game draws it (each stroke has pathLength 1 and its turn in --i). It is
+   drawn once whatever holds it is shown ([data-reveal].shown), or `.drawn`. */
+.chalk :not(.dot) {
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 0;
+}
+
+.js .chalk :not(.dot) {
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.7s cubic-bezier(0.6, 0, 0.3, 1)
+    calc(var(--i, 0) * 0.14s + var(--chalk-delay, 0.25s));
+}
+
+.js .chalk .dot {
+  opacity: 0;
+  transition: opacity 0.4s ease calc(var(--i, 0) * 0.14s + var(--chalk-delay, 0.25s));
+}
+
+.js .shown .chalk :not(.dot),
+.js .chalk.drawn :not(.dot) {
+  stroke-dashoffset: 0;
+}
+
+.js .shown .chalk .dot,
+.js .chalk.drawn .dot {
+  opacity: 1;
+}
+
+/* The white stone that lies on a sign's ring, as on the title's choices. */
+.pebble {
+  display: block;
+  width: 12px;
+  height: 9px;
+  border-radius: 54% 46% 50% 50% / 58% 52% 48% 42%;
+  background:
+    radial-gradient(ellipse 45% 35% at 34% 32%, #fff, transparent 70%),
+    radial-gradient(ellipse at 45% 40%, #eef6ff 50%, #c4d8e6);
+  box-shadow:
+    0 0 10px rgba(200, 225, 255, 0.9),
+    0 0 22px rgba(160, 190, 255, 0.6);
+  rotate: -9deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .chalk :not(.dot) {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+
+  .js .chalk .dot {
+    opacity: 1;
     transition: none;
   }
 }

@@ -52,6 +52,8 @@ const m = t(Astro.props.lang);
       radial-gradient(40% 35% at 18% 20%, rgba(60, 90, 130, 0.25), transparent 70%),
       radial-gradient(30% 30% at 75% 50%, rgba(90, 60, 200, 0.18), transparent 70%),
       radial-gradient(25% 25% at 60% 5%, rgba(80, 60, 160, 0.14), transparent 70%);
+    /* Gone before the hero ends, so the dark meets the burnt paper below in one piece. */
+    mask-image: linear-gradient(#000 55%, transparent 80%);
     pointer-events: none;
   }
 

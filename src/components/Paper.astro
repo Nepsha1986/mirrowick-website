@@ -1,45 +1,119 @@
 ---
 /**
  * A sheet of old paper laid across the dark page, like the game's notes:
- * ragged top and bottom edges (seeded, so the same every build), stains,
+ * its top and bottom edges burnt away (a noise-bent edge, seeded, so the
+ * same every build, with the scorch running in from it), stains,
  * pencil-dark ink.
  */
 interface Props {
   class?: string;
   id?: string;
-  /** Picks the edges' shape. */
+  /** Picks the burn's shape. */
   seed?: number;
-  /** A touch of turn, in degrees. */
-  tilt?: number;
 }
 
-const { class: className, id, seed = 1, tilt = 0 } = Astro.props;
-
-/** mulberry32, as the game seeds everything it paints. */
-function rng(a: number) {
-  return () => {
-    a |= 0;
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-const R = rng(seed * 7919);
-const STEPS = 48;
-const edge = (y: number, dir: 1 | -1) =>
-  Array.from({ length: STEPS + 1 }, (_, i) => {
-    const x = (i / STEPS) * 100;
-    const dy = (R() * 0.9 + (i % 7 === 3 ? R() * 0.8 : 0)) * dir;
-    return `${x.toFixed(2)}% calc(${y}% + ${dy.toFixed(2)}vw)`;
-  });
-const top = edge(0, 1);
-const bottom = edge(100, -1).reverse();
-const clip = `polygon(${[...top, ...bottom].join(',')})`;
+const { class: className, id, seed = 1 } = Astro.props;
+const uid = `burn-${seed}`;
 ---
 
-<section class:list={['paper', className]} id={id} style={`--clip:${clip};--tilt:${tilt}deg`}>
+<section class:list={['paper', className]} id={id}>
+  {
+    (['top', 'bottom'] as const).map((side, i) => (
+      <svg
+        class:list={['edge', side]}
+        viewBox="0 0 1600 140"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <defs>
+          {/* The burnt line: big slow bites, then fine fraying on them. */}
+          <filter
+            id={`${uid}-${side}`}
+            x="-5%"
+            y="-60%"
+            width="110%"
+            height="220%"
+            color-interpolation-filters="sRGB"
+          >
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.0045 0.018"
+              numOctaves="5"
+              seed={seed * 11 + i}
+              result="noise"
+            />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="noise"
+              scale="90"
+              xChannelSelector="R"
+              yChannelSelector="G"
+            />
+          </filter>
+          {/* The scorch: the same line, softened, running brown into the sheet. */}
+          <filter
+            id={`${uid}-${side}-scorch`}
+            x="-5%"
+            y="-60%"
+            width="110%"
+            height="220%"
+            color-interpolation-filters="sRGB"
+          >
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.0045 0.018"
+              numOctaves="5"
+              seed={seed * 11 + i}
+              result="noise"
+            />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="noise"
+              scale="90"
+              xChannelSelector="R"
+              yChannelSelector="G"
+            />
+            <feGaussianBlur stdDeviation="7 5" />
+          </filter>
+        </defs>
+        <rect
+          x="-80"
+          y="-80"
+          width="1760"
+          height="160"
+          fill="#6b4320"
+          opacity="0.55"
+          filter={`url(#${uid}-${side}-scorch)`}
+        />
+        <rect
+          x="-80"
+          y="-80"
+          width="1760"
+          height="142"
+          fill="#3a1f0b"
+          opacity="0.85"
+          filter={`url(#${uid}-${side}-scorch)`}
+        />
+        <rect
+          x="-80"
+          y="-80"
+          width="1760"
+          height="133"
+          fill="#1a0c04"
+          filter={`url(#${uid}-${side})`}
+        />
+        <rect
+          x="-80"
+          y="-80"
+          width="1760"
+          height="128"
+          class="dark"
+          filter={`url(#${uid}-${side})`}
+        />
+      </svg>
+    ))
+  }
   <slot />
 </section>
 
@@ -51,11 +125,31 @@ const clip = `polygon(${[...top, ...bottom].join(',')})`;
       radial-gradient(circle at 86% 14%, rgba(150, 110, 60, 0.14), transparent 38%),
       radial-gradient(circle at 8% 88%, rgba(120, 90, 50, 0.12), transparent 34%),
       radial-gradient(120% 90% at 50% 50%, transparent 60%, rgba(110, 70, 30, 0.16)), var(--paper);
-    clip-path: var(--clip);
-    transform: rotate(var(--tilt));
-    padding-block: clamp(80px, 11vw, 150px);
-    margin-block: -1vw;
+    padding-block: clamp(110px, 13vw, 180px);
     box-shadow: inset 0 0 80px rgba(120, 90, 50, 0.18);
+    overflow: hidden;
+  }
+
+  /* The burn eats into the sheet from the dark page, top and bottom. */
+  .edge {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: clamp(70px, 8vw, 130px);
+    pointer-events: none;
+  }
+
+  .edge.top {
+    top: -1px;
+  }
+
+  .edge.bottom {
+    bottom: -1px;
+    transform: scaleY(-1);
+  }
+
+  .dark {
+    fill: var(--ink);
   }
 
   .paper :global(h2),

@@ -1,0 +1,41 @@
+---
+import Rune from './Rune.astro';
+
+/**
+ * A pause between two dark sections: the great rune, chalk-drawn as it
+ * comes into view, between two hairlines that fade out either way.
+ */
+---
+
+<div class="divider wrap" data-reveal aria-hidden="true">
+  <span class="line"></span>
+  <Rune sign="great" class="chalk" stroke={1.9} />
+  <span class="line"></span>
+</div>
+
+<style>
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 3vw, 32px);
+    color: var(--silver-dim);
+  }
+
+  .divider :global(svg) {
+    flex: none;
+    width: clamp(64px, 7vw, 88px);
+    height: auto;
+    overflow: visible;
+    filter: drop-shadow(0 0 10px var(--glass-glow));
+  }
+
+  .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--silver-faint));
+  }
+
+  .line:last-child {
+    background: linear-gradient(90deg, var(--silver-faint), transparent);
+  }
+</style>

@@ -2,8 +2,8 @@
 import Base from '../../layouts/Base.astro';
 import Hero from '../../components/home/Hero.astro';
 import Tales from '../../components/home/Tales.astro';
-import Glimpse from '../../components/home/Glimpse.astro';
 import Gallery from '../../components/home/Gallery.astro';
+import Divider from '../../components/Divider.astro';
 import Status from '../../components/home/Status.astro';
 import NewsTeaser from '../../components/home/NewsTeaser.astro';
 import { LOCALES, type Locale } from '../../i18n';
@@ -18,8 +18,8 @@ const lang = Astro.params.lang as Locale;
 <Base lang={lang}>
   <Hero lang={lang} />
   <Tales lang={lang} />
-  <Glimpse lang={lang} />
   <Gallery lang={lang} />
+  <Divider />
   <Status lang={lang} />
   <NewsTeaser lang={lang} />
 </Base>

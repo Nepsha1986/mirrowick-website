@@ -1,7 +1,9 @@
 ---
 import { Image, getImage } from 'astro:assets';
-import Paper from '../Paper.astro';
+import Heading from '../Heading.astro';
+import Rune from '../Rune.astro';
 import { t, type Locale } from '../../i18n';
+import cellar from '../../assets/shots/home-cellar.png';
 import porch from '../../assets/shots/home-porch.png';
 import driveway from '../../assets/shots/home-driveway.png';
 import garage from '../../assets/shots/home-garage.png';
@@ -11,7 +13,6 @@ import checkpoint from '../../assets/shots/tomorrow-checkpoint.png';
 import fight from '../../assets/shots/tomorrow-fight.png';
 import exp from '../../assets/shots/tomorrow-exp.png';
 import director from '../../assets/shots/tomorrow-director.png';
-import staff from '../../assets/shots/tomorrow-staff.png';
 import cornered from '../../assets/shots/tomorrow-fight-2.png';
 import vivarium from '../../assets/shots/tomorrow-vivarium.png';
 
@@ -20,195 +21,516 @@ interface Props {
 }
 
 const m = t(Astro.props.lang).gallery;
-/** In page order: the daylight first, then the dark. `lift` brightens a dark one a little. */
-const shots = [
-  { key: 'porch', src: porch },
+
+/**
+ * The shots as they are walked through: the house by day, into the dark,
+ * down the cellar, on into the Facility. `size` lays the mosaic: a big one
+ * takes two rows on the left or the right, the rest fill in round it.
+ * `lift` brightens a dark one a little.
+ */
+const shots: {
+  key: keyof typeof m.shots;
+  src: ImageMetadata;
+  size?: 'big-left' | 'big-right';
+  lift?: number;
+}[] = [
+  { key: 'porch', src: porch, size: 'big-left' },
   { key: 'evening', src: evening },
-  { key: 'fight', src: fight, lift: 1.3 },
-  { key: 'driveway', src: driveway },
-  { key: 'checkpoint', src: checkpoint, lift: 1.3 },
   { key: 'night', src: night, lift: 1.2 },
-  { key: 'exp', src: exp, lift: 1.2 },
+  { key: 'driveway', src: driveway },
+  { key: 'cellar', src: cellar, size: 'big-right' },
   { key: 'garage', src: garage },
-  { key: 'director', src: director, lift: 1.35 },
-  { key: 'cornered', src: cornered, lift: 1.3 },
-  { key: 'staff', src: staff, lift: 1.35 },
+  { key: 'checkpoint', src: checkpoint, lift: 1.3 },
+  { key: 'exp', src: exp, lift: 1.2 },
   { key: 'vivarium', src: vivarium, lift: 1.3 },
-] as const;
-/** Each print lies a little askew, as photos on a desk do. */
-const TURNS = [-1.6, 1.1, -0.6, 1.8, 0.7, -1.3, 1.5, -0.9, 0.4, -1.8, 1.2, -0.4];
+  { key: 'fight', src: fight, size: 'big-left', lift: 1.3 },
+  { key: 'cornered', src: cornered, lift: 1.3 },
+  { key: 'director', src: director, lift: 1.35 },
+];
+/** Twelve shots, twelve signs of the seal: each shot carries one. */
 const items = await Promise.all(
-  shots.map(async (s) => ({
+  shots.map(async (s, i) => ({
     ...s,
+    sign: String(i + 1).padStart(2, '0'),
     alt: m.shots[s.key],
-    big: (await getImage({ src: s.src, width: 1512, format: 'webp' })).src,
+    big: (await getImage({ src: s.src, width: 1920, format: 'webp' })).src,
   })),
 );
 ---
 
-<Paper class="gallery" seed={8}>
+<section class="section shots">
   <div class="wrap">
-    <h2 data-reveal>{m.title}</h2>
-    <ul class="grid">
+    <Heading kicker={m.kicker} title={m.title} lead={m.lead} sign="03" />
+  </div>
+
+  <ul class="mosaic">
+    {
+      items.map((s, i) => (
+        <li class:list={['tile', s.size]} data-reveal style={`transition-delay:${(i % 3) * 0.08}s`}>
+          <a href={s.big} data-big={s.big} aria-label={`${m.open}: ${s.alt}`}>
+            <Image
+              src={s.src}
+              alt={s.alt}
+              widths={s.size ? [640, 960, 1400] : [400, 640, 900]}
+              sizes={s.size ? '(max-width: 760px) 100vw, 66vw' : '(max-width: 760px) 50vw, 33vw'}
+              style={s.lift ? `--lift:${s.lift}` : undefined}
+            />
+            <span class="caption">
+              <Rune sign={s.sign} class="glyph" stroke={3.4} />
+              {s.alt}
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <dialog class="viewer" aria-label={m.title}>
+    <figure>
+      <img alt="" />
+      <figcaption class="what"></figcaption>
+    </figure>
+    <!-- Where you are among the twelve: the sign of the shot up has its stone. -->
+    <ol class="signs">
       {
-        items.map((s, i) => (
-          <li
-            data-reveal
-            style={`transition-delay:${(i % 4) * 0.06}s;--turn:${TURNS[i % TURNS.length]}deg`}
-          >
-            <a href={s.big} data-big={s.big} aria-label={`${m.open}: ${s.alt}`}>
-              <Image
-                src={s.src}
-                alt={s.alt}
-                widths={[400, 640]}
-                sizes="(max-width: 640px) 50vw, (max-width: 1000px) 33vw, 290px"
-                style={'lift' in s ? `filter:brightness(${s.lift})` : undefined}
-              />
-              <span class="label">{s.alt}</span>
-            </a>
+        items.map((s) => (
+          <li>
+            <button type="button" aria-label={s.alt}>
+              <Rune sign={s.sign} stroke={3.4} />
+              <i class="pebble" />
+            </button>
           </li>
         ))
       }
-    </ul>
-  </div>
-  <dialog class="box" aria-label={m.title}>
-    <form method="dialog">
-      <button class="close" aria-label={m.close}>×</button>
-    </form>
-    <img alt="" />
-    <p class="caption"></p>
+    </ol>
+    <button class="ctl close" type="button" autofocus aria-label={m.close}>×</button>
+    <button class="ctl prev" type="button" aria-label={m.prev}>‹</button>
+    <button class="ctl next" type="button" aria-label={m.next}>›</button>
   </dialog>
-</Paper>
+</section>
 
 <script>
-  // A click opens the shot large over the page; Esc, the cross or a click outside closes it.
-  for (const section of document.querySelectorAll<HTMLElement>('.gallery')) {
-    const box = section.querySelector('dialog')!;
-    const img = box.querySelector('img')!;
-    const caption = box.querySelector('.caption')!;
-    for (const a of section.querySelectorAll<HTMLAnchorElement>('a[data-big]')) {
+  for (const section of document.querySelectorAll<HTMLElement>('.shots')) {
+    const mosaic = section.querySelector<HTMLElement>('.mosaic')!;
+
+    // A pool of light follows the pointer over the shots; the rest stays dim.
+    if (matchMedia('(hover: hover)').matches) {
+      let frame = 0;
+      mosaic.addEventListener('pointermove', (e) => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          const r = mosaic.getBoundingClientRect();
+          mosaic.style.setProperty('--x', `${e.clientX - r.left}px`);
+          mosaic.style.setProperty('--y', `${e.clientY - r.top}px`);
+          mosaic.classList.add('lit');
+        });
+      });
+      mosaic.addEventListener('pointerleave', () => mosaic.classList.remove('lit'));
+    }
+
+    // A click opens a shot over the page; the arrows, ← → or a swipe leaf
+    // through the rest; Esc, the cross or a click on the dark closes it.
+    const viewer = section.querySelector('dialog')!;
+    const img = viewer.querySelector('img')!;
+    const what = viewer.querySelector('.what')!;
+    const signs = [...viewer.querySelectorAll<HTMLButtonElement>('.signs button')];
+    const links = [...mosaic.querySelectorAll<HTMLAnchorElement>('a[data-big]')];
+    let at = 0;
+    const show = (i: number) => {
+      at = (i + links.length) % links.length;
+      const thumb = links[at]!.querySelector('img')!;
+      img.src = links[at]!.dataset.big!;
+      img.alt = thumb.alt;
+      img.style.cssText = thumb.style.cssText;
+      what.textContent = thumb.alt;
+      signs.forEach((b, j) =>
+        j === at ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current'),
+      );
+      // The neighbours load while this one is looked at.
+      for (const j of [at - 1, at + 1])
+        new Image().src = links[(j + links.length) % links.length]!.dataset.big!;
+    };
+    links.forEach((a, i) =>
       a.addEventListener('click', (e) => {
         e.preventDefault();
-        const thumb = a.querySelector('img')!;
-        img.src = a.dataset.big!;
-        img.alt = thumb.alt;
-        img.style.filter = thumb.style.filter;
-        caption.textContent = thumb.alt;
-        box.showModal();
-      });
-    }
-    box.addEventListener('click', (e) => {
-      if (e.target === box) box.close();
+        show(i);
+        viewer.showModal();
+      }),
+    );
+    signs.forEach((b, i) => b.addEventListener('click', () => show(i)));
+    viewer.querySelector('.prev')!.addEventListener('click', () => show(at - 1));
+    viewer.querySelector('.next')!.addEventListener('click', () => show(at + 1));
+    viewer.querySelector('.close')!.addEventListener('click', () => viewer.close());
+    viewer.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(at - 1);
+      if (e.key === 'ArrowRight') show(at + 1);
+    });
+    viewer.addEventListener('click', (e) => {
+      if (e.target === viewer || e.target === viewer.querySelector('figure')) viewer.close();
+    });
+    let x0: number | null = null;
+    viewer.addEventListener('touchstart', (e) => (x0 = e.touches[0]!.clientX), { passive: true });
+    viewer.addEventListener('touchend', (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0]!.clientX - x0;
+      if (Math.abs(dx) > 48) show(at + (dx < 0 ? 1 : -1));
+      x0 = null;
     });
   }
 </script>
 
 <style>
-  h2 {
-    margin-bottom: clamp(28px, 4vw, 48px);
-  }
-
-  .grid {
-    align-items: start;
-    list-style: none;
-    margin: 0;
+  /* Wider than the text: the shots want the room. */
+  .mosaic {
+    --gap: clamp(6px, 0.8vw, 12px);
+    position: relative;
+    width: min(1400px, 100% - 2 * var(--gutter));
+    margin: 0 auto;
     padding: 0;
+    list-style: none;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: clamp(18px, 2.4vw, 30px);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-auto-flow: row dense;
+    gap: var(--gap);
   }
 
-  /* A print: the shot in a pale border, a line written under it. */
-  .grid a {
+  /* The dark over the shots, with the pool of light cut out of it. */
+  .mosaic::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: radial-gradient(
+      circle clamp(260px, 26vw, 420px) at var(--x, 50%) var(--y, 50%),
+      transparent 30%,
+      rgba(5, 6, 8, 0.5) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  .mosaic.lit::after {
+    opacity: 1;
+  }
+
+  .tile {
+    grid-column: span 4;
+  }
+
+  .tile.big-left {
+    grid-column: 1 / span 8;
+    grid-row: span 2;
+  }
+
+  .tile.big-right {
+    grid-column: 5 / span 8;
+    grid-row: span 2;
+  }
+
+  .tile a {
+    position: relative;
     display: block;
-    padding: 8px 8px 10px;
-    background: #fbf8f1;
-    box-shadow:
-      0 1px 2px rgba(60, 40, 20, 0.2),
-      0 12px 26px rgba(60, 40, 20, 0.22);
-    transform: rotate(var(--turn));
-    text-decoration: none;
-    transition:
-      transform 0.35s ease,
-      box-shadow 0.35s ease;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--night);
+    outline-offset: 3px;
   }
 
-  .grid a:hover {
-    transform: rotate(0deg) translateY(-4px) scale(1.03);
-    box-shadow:
-      0 2px 4px rgba(60, 40, 20, 0.2),
-      0 22px 40px rgba(60, 40, 20, 0.28);
-  }
-
-  .grid :global(img) {
+  .tile :global(img) {
     width: 100%;
+    height: 100%;
     aspect-ratio: 16 / 10;
     object-fit: cover;
-    background: var(--night);
+    filter: brightness(calc(var(--lift, 1) * 0.92));
+    transition:
+      transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1),
+      filter 0.6s ease;
   }
 
-  .label {
-    display: block;
-    margin-top: 8px;
-    font: italic 500 1rem/1.25 var(--serif);
-    color: var(--hand);
+  /* A big one takes the height of the two rows beside it, not its own. */
+  .tile.big-left :global(img),
+  .tile.big-right :global(img) {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
   }
 
-  .box {
-    max-width: min(1400px, 100vw - 32px);
-    max-height: calc(100vh - 32px);
-    padding: 0;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--ink);
-    color: var(--silver);
-    overflow: hidden;
+  .tile a:hover :global(img),
+  .tile a:focus-visible :global(img) {
+    transform: scale(1.04);
+    filter: brightness(calc(var(--lift, 1) * 1.08));
   }
 
-  .box::backdrop {
-    background: rgba(2, 3, 6, 0.88);
-    backdrop-filter: blur(4px);
+  /* A thin frame of light round the edge, like glass over a print. */
+  .tile a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(223, 228, 236, 0.08);
+    pointer-events: none;
+    transition: box-shadow 0.4s ease;
   }
 
-  .box img {
-    display: block;
-    max-width: 100%;
-    max-height: calc(100vh - 100px);
-    margin: 0 auto;
+  .tile a:hover::after {
+    box-shadow: inset 0 0 0 1px rgba(157, 178, 255, 0.35);
   }
 
   .caption {
-    margin: 0;
-    padding: 12px 18px;
-    font-size: 0.9rem;
+    position: absolute;
+    z-index: 3;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 40px 16px 12px;
+    background: linear-gradient(transparent, rgba(5, 6, 8, 0.85));
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font: italic 500 clamp(1rem, 1.4vw, 1.2rem) / 1.25 var(--serif);
+    color: var(--silver);
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+
+  /* The shot's sign, drawn in chalk as the caption comes up. */
+  .caption :global(.glyph) {
+    flex: none;
+    width: 1.6em;
+    height: 1.6em;
+    overflow: visible;
     color: var(--silver-dim);
   }
 
-  .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid var(--silver-faint);
-    background: rgba(5, 6, 8, 0.7);
-    color: var(--silver);
-    font-size: 1.4rem;
-    line-height: 1;
-    cursor: pointer;
+  .caption :global(.glyph :not(.dot)) {
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0.5s cubic-bezier(0.6, 0, 0.3, 1) calc(0.1s + var(--i, 0) * 0.08s);
   }
 
-  @media (max-width: 1000px) {
-    .grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+  .caption :global(.glyph .dot) {
+    opacity: 0;
+    transition: opacity 0.3s ease 0.4s;
+  }
+
+  .tile a:hover .caption :global(.glyph :not(.dot)),
+  .tile a:focus-visible .caption :global(.glyph :not(.dot)) {
+    stroke-dashoffset: 0;
+  }
+
+  .tile a:hover .caption :global(.glyph .dot),
+  .tile a:focus-visible .caption :global(.glyph .dot) {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .caption :global(.glyph :not(.dot)) {
+      stroke-dashoffset: 0;
+    }
+
+    .caption :global(.glyph .dot) {
+      opacity: 1;
     }
   }
 
-  @media (max-width: 640px) {
-    .grid {
+  .tile a:hover .caption,
+  .tile a:focus-visible .caption {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Without a pointer to hover, the lines are always there. */
+  @media (hover: none) {
+    .caption {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .viewer {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgba(3, 4, 6, 0.94);
+    color: var(--silver);
+  }
+
+  .viewer::backdrop {
+    background: rgba(3, 4, 6, 0.6);
+    backdrop-filter: blur(6px);
+  }
+
+  .viewer[open] {
+    display: grid;
+    place-items: center;
+    animation: fade 0.3s ease;
+  }
+
+  .viewer figure {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 14px;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 64px clamp(12px, 7vw, 96px) 80px;
+    box-sizing: border-box;
+  }
+
+  .viewer img {
+    max-width: 100%;
+    max-height: calc(100dvh - 190px);
+    border-radius: 4px;
+    filter: brightness(var(--lift, 1));
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
+  }
+
+  .viewer figcaption {
+    font: italic 500 1.2rem/1.3 var(--serif);
+  }
+
+  .signs {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(12px, 3vh, 28px);
+    display: flex;
+    justify-content: center;
+    gap: clamp(2px, 0.8vw, 10px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .signs button {
+    position: relative;
+    display: block;
+    width: clamp(26px, 3vw, 36px);
+    height: clamp(26px, 3vw, 36px);
+    padding: 3px;
+    border: 0;
+    background: none;
+    color: var(--silver-faint);
+    cursor: pointer;
+    transition:
+      color 0.25s ease,
+      filter 0.25s ease;
+  }
+
+  .signs button:hover {
+    color: var(--silver-dim);
+  }
+
+  .signs button[aria-current='true'] {
+    color: var(--silver);
+    filter: drop-shadow(0 0 6px var(--glass-glow));
+  }
+
+  .signs :global(svg) {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .signs .pebble {
+    position: absolute;
+    left: calc(50% - 6px);
+    top: calc(50% - 4.5px);
+    scale: 0.6;
+    opacity: 0;
+    transition:
+      opacity 0.3s ease,
+      scale 0.3s ease;
+  }
+
+  .signs [aria-current='true'] .pebble {
+    opacity: 1;
+    scale: 0.75;
+  }
+
+  .ctl {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--silver-faint);
+    background: rgba(5, 6, 8, 0.6);
+    color: var(--silver);
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .ctl:hover {
+    border-color: var(--glass);
+    background: rgba(157, 178, 255, 0.12);
+  }
+
+  .close {
+    top: 14px;
+    right: 14px;
+  }
+
+  .prev,
+  .next {
+    top: calc(50% - 24px);
+  }
+
+  .prev {
+    left: clamp(8px, 2vw, 28px);
+  }
+
+  .next {
+    right: clamp(8px, 2vw, 28px);
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .mosaic {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
+    }
+
+    .tile {
+      grid-column: span 1;
+    }
+
+    .tile.big-left,
+    .tile.big-right {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+
+    .tile.big-left a,
+    .tile.big-right a {
+      aspect-ratio: 16 / 10;
+    }
+
+    .caption {
+      padding: 28px 10px 8px;
+      font-size: 0.95rem;
+    }
+
+    .prev,
+    .next {
+      display: none;
     }
   }
 </style>

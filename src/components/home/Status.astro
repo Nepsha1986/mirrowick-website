@@ -1,4 +1,5 @@
 ---
+import Heading from '../Heading.astro';
 import { t, type Locale } from '../../i18n';
 import { PLAY_URL } from '../../site';
 
@@ -13,11 +14,10 @@ const s = m.status;
 <section class="section status" id="play">
   <div class="wrap grid">
     <div class="where" data-reveal>
-      <h2>{s.title}</h2>
-      <p class="lead">{s.lead}</p>
+      <Heading kicker={s.kicker} title={s.title} lead={s.lead} sign="07" />
       <h3 class="eyebrow">{s.platforms}</h3>
       <a class="platform live" href={PLAY_URL}>
-        <span class="name">{s.browser}</span>
+        <span class="name"><i class="pebble"></i>{s.browser}</span>
         <span class="url">play.mirrowick.com →</span>
       </a>
       <div class="platform">
@@ -54,8 +54,7 @@ const s = m.status;
     gap: 12px;
   }
 
-  .where h2,
-  .where .lead {
+  .where :global(.heading) {
     margin-bottom: 0;
   }
 
@@ -80,7 +79,15 @@ const s = m.status;
   }
 
   .name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-weight: 600;
+  }
+
+  /* The stone, as on the title's choices: the way in that is open now. */
+  .name .pebble {
+    flex: none;
   }
 
   .url {
