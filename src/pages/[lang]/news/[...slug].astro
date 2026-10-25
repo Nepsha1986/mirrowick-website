@@ -68,6 +68,15 @@ const m = t(lang).news;
   </article>
 </Base>
 
+<script>
+  // Links in a post that leave the site (the game too) open in a tab of their own.
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('.prose a[href]')) {
+    if (a.origin === location.origin) continue;
+    a.target = '_blank';
+    a.rel = 'noopener';
+  }
+</script>
+
 <style>
   .post {
     padding-top: clamp(40px, 7vw, 90px);

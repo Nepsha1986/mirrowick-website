@@ -16,7 +16,7 @@ const s = m.status;
     <div class="where" data-reveal>
       <Heading kicker={s.kicker} title={s.title} lead={s.lead} sign="07" />
       <h3 class="eyebrow">{s.platforms}</h3>
-      <a class="platform live" href={PLAY_URL}>
+      <a class="platform live" href={PLAY_URL} target="_blank" rel="noopener">
         <span class="name"><i class="pebble"></i>{s.browser}</span>
         <span class="url">play.mirrowick.com →</span>
       </a>
@@ -24,7 +24,7 @@ const s = m.status;
         <span class="name">{s.steamSoon}</span>
         <span class="url">Steam</span>
       </div>
-      <a class="btn btn-primary" href={PLAY_URL}>{m.hero.play}</a>
+      <a class="btn btn-primary" href={PLAY_URL} target="_blank" rel="noopener">{m.hero.play}</a>
     </div>
 
     <!-- What the prototype has, typed on a sheet as the Facility's notes are. -->
