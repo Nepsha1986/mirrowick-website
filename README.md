@@ -86,6 +86,13 @@ HUD hidden, and kept in `src/assets/shots/`. Astro turns them into WebP at
 build time. The intro's frames (`src/assets/film/<year>.png`) are its film
 canvas saved as it is, without the words under it.
 
+## Analytics
+
+Google Analytics 4 (`GA_ID` in `src/site.ts`), on the built site only:
+`src/components/Analytics.astro` sets it up in consent mode with storage
+denied, and `src/components/Consent.astro` asks once whether it may set its
+cookies (the footer's "Cookies" asks again).
+
 ## Deploy
 
 Every push to `main` builds the site and publishes it to GitHub Pages

@@ -1,0 +1,37 @@
+---
+import { GA_ID } from '../site';
+
+/**
+ * Google Analytics, on the built site only (in `npm run dev` it stays off).
+ * Storage stays denied, so no cookies, until the visitor says yes
+ * (`Consent.astro`); till then Google gets only cookieless pings.
+ */
+const id = import.meta.env.PROD ? GA_ID : '';
+---
+
+<script is:inline define:vars={{ id }}>
+  if (id) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () {
+      window.dataLayer.push(arguments);
+    };
+    let said = null;
+    try {
+      said = localStorage.getItem('mirrowick.consent');
+    } catch {
+      // Storage blocked: ask nothing of it, keep storage denied.
+    }
+    window.gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: said === 'granted' ? 'granted' : 'denied',
+    });
+    window.gtag('js', new Date());
+    window.gtag('config', id);
+    const tag = document.createElement('script');
+    tag.async = true;
+    tag.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+    document.head.append(tag);
+  }
+</script>

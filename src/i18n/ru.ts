@@ -84,6 +84,13 @@ export const ru: Messages = {
     back: 'Ко всем новостям',
     none: 'Пока пусто.',
   },
+  consent: {
+    label: 'Cookies',
+    text: 'Мы считаем посещения через Google Analytics, чтобы понимать, что здесь смотрят. Разрешить ему cookies?',
+    accept: 'Разрешить',
+    decline: 'Не надо',
+    settings: 'Cookies',
+  },
   footer: {
     made: 'Mirrowick © {year}',
   },

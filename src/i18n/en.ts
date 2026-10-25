@@ -91,6 +91,13 @@ export const en = {
     back: 'Back to news',
     none: 'Nothing here yet.',
   },
+  consent: {
+    label: 'Cookies',
+    text: 'We count visits with Google Analytics, to see what people look at here. May it set its cookies?',
+    accept: 'Allow',
+    decline: 'No, thanks',
+    settings: 'Cookies',
+  },
   footer: {
     made: 'Mirrowick © {year}',
   },

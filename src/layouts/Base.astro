@@ -10,6 +10,8 @@ import '../styles/global.css';
 import { getImage } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Consent from '../components/Consent.astro';
+import Analytics from '../components/Analytics.astro';
 import { LOCALES, OG_LOCALE, localePath, t, type Locale } from '../i18n';
 import ogShot from '../assets/shots/home-cellar.png';
 
@@ -62,6 +64,7 @@ const og = await getImage({ src: ogShot, width: 1200, format: 'jpg' });
     <script is:inline>
       document.documentElement.classList.add('js');
     </script>
+    <Analytics />
   </head>
   <body>
     <a class="skip" href="#main">{m.nav.skip}</a>
@@ -70,6 +73,7 @@ const og = await getImage({ src: ogShot, width: 1200, format: 'jpg' });
       <slot />
     </main>
     <Footer lang={lang} />
+    <Consent lang={lang} />
     <script>
       import '../scripts/reveal.ts';
     </script>

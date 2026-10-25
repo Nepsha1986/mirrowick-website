@@ -32,6 +32,7 @@ const SIGNS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'
     <nav class="links" aria-label="Footer">
       <a href={PLAY_URL} target="_blank" rel="noopener">{m.nav.play}</a>
       <a href={href(lang, 'news')}>{m.nav.news}</a>
+      <a href="#" data-consent-open>{m.consent.settings}</a>
     </nav>
     <p class="small">
       {fill(m.footer.made, { year: new Date().getFullYear() })}

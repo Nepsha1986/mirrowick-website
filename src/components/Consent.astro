@@ -1,0 +1,123 @@
+---
+import { t, type Locale } from '../i18n';
+
+/**
+ * Asks once whether Google Analytics may set its cookies. Until the answer
+ * is yes, the tag (in `Base.astro`) runs in consent mode with storage
+ * denied: no cookies, only cookieless pings. The choice is kept in
+ * localStorage; any `[data-consent-open]` (the footer's link) asks again.
+ */
+interface Props {
+  lang: Locale;
+}
+
+const m = t(Astro.props.lang).consent;
+---
+
+<aside class="consent" aria-label={m.label} hidden>
+  <p>{m.text}</p>
+  <div class="choices">
+    <button class="btn btn-primary" type="button" data-choice="granted">{m.accept}</button>
+    <button class="btn" type="button" data-choice="denied">{m.decline}</button>
+  </div>
+</aside>
+
+<script>
+  const KEY = 'mirrowick.consent';
+  const box = document.querySelector<HTMLElement>('.consent')!;
+  const read = () => {
+    try {
+      return localStorage.getItem(KEY);
+    } catch {
+      return null;
+    }
+  };
+  if (!read()) box.hidden = false;
+
+  /** A no after a yes: take back the cookies Google has set (here and on the parent domain). */
+  const forget = () => {
+    const host = location.hostname;
+    const domains = ['', host, `.${host.split('.').slice(-2).join('.')}`];
+    for (const c of document.cookie.split(';')) {
+      const name = c.split('=')[0]!.trim();
+      if (!name.startsWith('_ga')) continue;
+      for (const d of domains)
+        document.cookie = `${name}=; Max-Age=0; path=/${d ? `; domain=${d}` : ''}`;
+    }
+  };
+
+  for (const b of box.querySelectorAll<HTMLButtonElement>('[data-choice]')) {
+    b.addEventListener('click', () => {
+      const choice = b.dataset.choice as 'granted' | 'denied';
+      try {
+        localStorage.setItem(KEY, choice);
+      } catch {
+        // Private mode: the choice holds for this page only.
+      }
+      window.gtag?.('consent', 'update', { analytics_storage: choice });
+      if (choice === 'denied') forget();
+      box.hidden = true;
+    });
+  }
+
+  for (const a of document.querySelectorAll('[data-consent-open]')) {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      box.hidden = false;
+      box.querySelector('button')?.focus();
+    });
+  }
+</script>
+
+<style>
+  /* A small card in the corner, words on the dark as the game's menu has them. */
+  .consent {
+    position: fixed;
+    z-index: 50;
+    left: 16px;
+    bottom: 16px;
+    width: min(420px, calc(100vw - 32px));
+    padding: 18px 20px;
+    border: 1px solid rgba(157, 178, 255, 0.28);
+    border-radius: var(--radius);
+    background: rgba(10, 12, 18, 0.94);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    animation: rise 0.5s ease both;
+  }
+
+  .consent[hidden] {
+    display: none;
+  }
+
+  p {
+    margin: 0 0 14px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--silver-dim);
+  }
+
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .choices .btn {
+    padding: 0.6em 1.2em;
+    font-size: 0.85rem;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .consent {
+      animation: none;
+    }
+  }
+</style>
