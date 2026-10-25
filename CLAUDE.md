@@ -13,6 +13,8 @@ Russian. Code, comments and commit messages are in English.
   really is, that Home and the Fading Tomorrow are one place in two times
   (no "two times", no crossing between them), the company, the year of the
   disaster, that the glass only leads forward, what became of Victor.
+  Screenshots too: Chamber 7 is the cellar long after, so it never goes on
+  the site beside the cellar; nor does the burrow under the trees (a secret).
 - **Only what is real.** Describe what the game has now, not what was only
   discussed. Steam is "coming", with no link, until there is a store page.
 - **No GitHub links.** The game's repository is closed; the site never links to

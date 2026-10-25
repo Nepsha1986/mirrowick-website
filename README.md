@@ -65,10 +65,10 @@ A post is a file in `src/content/news/<lang>/`, with this front matter:
 
 ```yaml
 ---
-title: 'The first chapter’s prototype is playable'
+title: 'A concept demo of the first chapter'
 description: 'One or two sentences for the list and for search results.'
 date: 2026-10-25
-cover: ../../../assets/shots/tomorrow-vivarium.png # optional
+cover: ../../../assets/shots/home-cellar.png # optional
 coverAlt: 'What the cover shows' # optional
 draft: false # optional; drafts show only in `npm run dev`
 ---

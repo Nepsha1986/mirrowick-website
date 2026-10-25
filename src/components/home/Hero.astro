@@ -91,12 +91,30 @@ const m = t(Astro.props.lang);
     margin-top: 2em;
   }
 
+  /* Plain to see: what you play is a concept, not the game. */
   .status {
-    margin-top: 1.4em;
-    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 1.6em;
+    padding: 7px 14px;
+    border: 1px dashed rgba(157, 178, 255, 0.4);
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--silver-faint);
+    color: var(--silver-dim);
+  }
+
+  .status::before {
+    content: '';
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--glass);
+    box-shadow: 0 0 8px var(--glass-glow);
   }
 
   .art {

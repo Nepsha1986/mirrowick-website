@@ -27,12 +27,13 @@ const s = m.status;
       <a class="btn btn-primary" href={PLAY_URL} target="_blank" rel="noopener">{m.hero.play}</a>
     </div>
 
-    <!-- What the prototype has, typed on a sheet as the Facility's notes are. -->
+    <!-- What the demo has, typed on a sheet as the Facility's notes are. -->
     <div class="note" data-reveal>
       <h3>{s.has}</h3>
       <ul>
         {s.items.map((item) => <li>{item}</li>)}
       </ul>
+      <p class="caveat">{s.caveat}</p>
     </div>
   </div>
 </section>
@@ -145,6 +146,18 @@ const s = m.status;
     position: absolute;
     left: 0;
     color: var(--paper-ink-faint);
+  }
+
+  /* Typed last, and underlined by hand in pencil. */
+  .caveat {
+    margin: 1.4em 0 0;
+    padding-top: 1em;
+    border-top: 1px dashed rgba(46, 33, 24, 0.3);
+    font:
+      700 0.95rem/1.5 'Courier New',
+      Courier,
+      monospace;
+    color: var(--paper-ink);
   }
 
   @media (max-width: 900px) {
