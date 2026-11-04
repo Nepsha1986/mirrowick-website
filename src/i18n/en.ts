@@ -58,7 +58,7 @@ export const en = {
       lockers: 'The changing room',
       exit: 'The way to the exit',
       shotgun: 'A shotgun in the dark',
-      pistol: 'Not alone here',
+      pistol: 'Two of them',
       m4: 'A burst from the M4',
     },
   },

@@ -52,7 +52,7 @@ export const ru: Messages = {
       lockers: 'Раздевалка',
       exit: 'Дорога к выходу',
       shotgun: 'Дробовик в темноте',
-      pistol: 'Здесь он не один',
+      pistol: 'Их двое',
       m4: 'Очередь из M4',
     },
   },
