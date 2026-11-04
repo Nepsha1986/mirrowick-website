@@ -2,6 +2,7 @@
 title: 'A concept demo of the first chapter'
 description: 'Not the game yet, only its concept: a short demo in the browser, with Victor’s homestead, the cellar and the Facility’s underground level.'
 date: 2026-10-25
+gameCommit: 2d3da6320434f744cd41ee7e6020cb6b934e5352
 ---
 
 There is a short demo of Mirrowick, and you can [try it in the browser](https://play.mirrowick.com/) for free.

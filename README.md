@@ -71,12 +71,18 @@ date: 2026-10-25
 cover: ../../../assets/shots/home-cellar.png # optional
 coverAlt: 'What the cover shows' # optional
 draft: false # optional; drafts show only in `npm run dev`
+gameCommit: 2d3da63… # optional; the game's last commit this post covers
 ---
 ```
 
 The same post in another language has the same file name in that
 language's folder; then the language switch leads from one to the other. A
 post needn't be in every language.
+
+In Claude Code, `/post-news` writes a post about what changed in the game since
+the last `gameCommit`, in every language and with new screenshots, on a branch
+of its own. It opens a PR and merges only once the operator confirms. The steps
+are in `.claude/commands/post-news.md`.
 
 ## Screenshots
 

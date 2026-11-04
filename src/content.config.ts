@@ -17,6 +17,8 @@ const news = defineCollection({
       cover: image().optional(),
       coverAlt: z.string().optional(),
       draft: z.boolean().default(false),
+      /** The game's last commit this post covers; `/post-news` starts after it. Not shown. */
+      gameCommit: z.string().optional(),
     }),
 });
 
