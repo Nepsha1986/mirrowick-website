@@ -9,7 +9,7 @@ export const en = {
     /** As the browser tab and search results show it. */
     title: 'Mirrowick — a top-down mystery game',
     description:
-      'A concept demo of a single-player top-down game set in Mirrowick, an old New England town. Your uncle Victor is missing, and under his shed there is a cellar.',
+      'A concept demo of a single-player top-down game set in Mirrowick, an old New England town. Your brother Victor is missing, and under his shed there is a cellar.',
   },
   nav: {
     play: 'Demo',
@@ -70,7 +70,7 @@ export const en = {
     items: [
       'The intro and the call that starts it all',
       'Victor’s homestead, the shed and the cellar',
-      'The Facility: its underground level and the yard above',
+      'Site 7: its underground level and the yard above',
       'Light and shadow, notes and letters, an inventory',
       'Real-time fights, running and tiring, autosave',
       'Survival mode, opened at the end of the demo',

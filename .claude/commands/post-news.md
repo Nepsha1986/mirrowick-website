@@ -73,8 +73,11 @@ gameCommit: <full SHA of the end commit>
 ---
 ```
 
-- **Shape:** a short opening on the period, then a list of what changed for the
-  player, then one or two paragraphs of how it was made. Read
+- **Shape:** a few short paragraphs of connected prose, no bullet lists. Stay on
+  the surface: say what changed for the player in general terms, without
+  specific mechanics, numbers, keys or places, so nothing gets spoiled and it
+  doesn't read like a changelog. End with a few lines on how it was made. Read
+  `src/content/news/*/mark-time-and-hunger.md` for the shape, and
   `src/content/news/*/concept-demo.md` for the voice: "we", plain and modest, no
   hype, no em-dash flourishes.
 - **Only what was done.** No plans, promises or dates, unless the operator
@@ -86,8 +89,8 @@ gameCommit: <full SHA of the end commit>
 
 ## 5. Take the screenshots
 
-A cover, and an image in the text wherever it shows something better than words
-(Markdown: `![alt](../../../assets/shots/news/<slug>-<what>.png)`, the alt in the
+A cover, and at most one or two images in the text, where one shows something
+better than words (Markdown: `![alt](../../../assets/shots/news/<slug>-<what>.png)`, the alt in the
 post's language). All of them are new, taken from the game at `end`:
 
 ```bash
